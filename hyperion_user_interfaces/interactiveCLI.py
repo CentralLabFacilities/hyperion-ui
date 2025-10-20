@@ -8,6 +8,7 @@ import hyperion.lib.util.events as events
 import hyperion.lib.util.config as config
 import os
 import time
+import logging
 
 from hyperion.lib.monitoring.threads import *
 from hyperion.manager import ControlCenter
@@ -119,6 +120,10 @@ class StateController(object):
         :param cc: Reference to core application
         :type cc: hyperion.ControlCenter
         """
+
+
+        urwid_logger = logging.getLogger("urwid")
+        urwid_logger.setLevel(logging.ERROR)
 
         self.cc = cc
         self.selected_group = None
