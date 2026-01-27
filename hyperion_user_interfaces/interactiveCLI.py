@@ -147,6 +147,7 @@ class StateController(object):
 
         self.radio_button_log_group = []
         group_col = self.group_col = urwid.Columns([], 1)
+        
         components_pile = self.components_pile = urwid.Pile([])
         host_pile = self.host_pile = urwid.Pile([
             urwid.Columns([
@@ -295,7 +296,10 @@ class StateController(object):
 
     def load_groups_from_config(self):
         for g in self.cc.config['groups']:
-            self.groups[g['name']] = g
+            if not len(g['components']) == 0:
+                self.groups[g['name']] = g
+            else:
+                self.logger.debug(f"Not adding empty group '{g}'")
         self.groups['All'] = ({'name': 'All'})
 
     def setup_component_states(self):
@@ -340,8 +344,8 @@ class StateController(object):
         :return: None
         """
         groups = []
-        for g in self.cc.config['groups']:
-
+        for grp in self.groups:
+            g = self.groups[grp]
             if not self.selected_group:
                 self.selected_group = g['name']
 
@@ -352,14 +356,14 @@ class StateController(object):
                 grp = urwid.AttrMap(grp, 'group')
             groups.append((grp, self.group_col.options()))
 
-        all_group = SimpleButton(u'All', self.change_group, 'All')
-        if self.selected_group == 'All':
-            all_group = urwid.AttrMap(all_group, 'group_selected')
-        else:
-            all_group = urwid.AttrMap(all_group, 'group')
-        groups.append((all_group, self.group_col.options()))
+        #all_group = SimpleButton(u'All', self.change_group, 'All')
+        #if self.selected_group == 'All':
+        #    all_group = urwid.AttrMap(all_group, 'group_selected')
+        #else:
+        #    all_group = urwid.AttrMap(all_group, 'group')
+        #groups.append((all_group, self.group_col.options()))
 
-        self.group_col._set_contents(groups)
+        self.group_col.contents = groups
 
     def change_group(self, button, group):
         """Change the currently selected group.
