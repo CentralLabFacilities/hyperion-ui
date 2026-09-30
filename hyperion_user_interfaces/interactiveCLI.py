@@ -604,7 +604,7 @@ class StateController(object):
                 try:
                     self.show_x_log_file(log_path, title)
                 except OSError as e:
-                    self.logger.warn("OSERROR, is xterm installed?")
+                    self.logger.warn("OSERROR, is alacritty installed?")
                     self.show_cli_log_file(log_path, title)
             else:
                 self.show_cli_log_file(log_path, title)
@@ -612,10 +612,10 @@ class StateController(object):
             self.logger.error("Log file '%s' does not exist!" % log_path)
 
     def show_x_log_file(self, log_path, title):
-        self.logger.debug("Opening xterm with log")
+        self.logger.debug("Opening alacritty with log")
         cmd = "tail -n +1 -F %s" % log_path
-        subprocess.Popen(['xterm', '-fg', 'white', '-bg', 'darkblue', '-title', '%s log' % title,
-                            '-e', '%s' % cmd], stdout=subprocess.PIPE)
+        subprocess.Popen(['alacritty', '-o', 'colors.primary.foreground="#FFFFFF"', '-o', 'colors.primary.background="#00008b"', '-T', f'{title} log',
+                            '-e', f'{cmd}'], stdout=subprocess.PIPE)
 
     def show_cli_log_file(self, log_path, title):
         log = self.comp_log_map.get(title, None)
