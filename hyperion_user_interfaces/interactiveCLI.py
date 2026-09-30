@@ -613,9 +613,8 @@ class StateController(object):
 
     def show_x_log_file(self, log_path, title):
         self.logger.debug("Opening alacritty with log")
-        cmd = "tail -n +1 -F %s" % log_path
-        subprocess.Popen(['alacritty', '-o', 'colors.primary.foreground="#FFFFFF"', '-o', 'colors.primary.background="#00008b"', '-T', f'{title} log',
-                            '-e', f'{cmd}'], stdout=subprocess.PIPE)
+        cmd = ['alacritty', '-o', 'colors.primary.foreground="#FFFFFF"', '-o', 'colors.primary.background="#00008b"', '-T', f'{title} log', '-e', 'tail', '-n', '+1', '-F', log_path]
+        subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
     def show_cli_log_file(self, log_path, title):
         log = self.comp_log_map.get(title, None)
